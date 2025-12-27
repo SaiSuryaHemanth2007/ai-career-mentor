@@ -4,37 +4,37 @@ An AI-powered career guidance platform for students
 
 📌 Problem Statement
 
-Millions of students struggle to make informed career decisions due to:
+Many students struggle to make informed career decisions due to:
 
-Lack of personalized guidance
+Lack of personalized career guidance
 
 Limited access to mentors
 
-Rapidly changing skill requirements in AI and cloud technologies
+Rapidly evolving skill requirements in AI and cloud technologies
 
-This often leads to confusion, poor skill alignment, and missed internship or job opportunities.
+This often leads to confusion, skill mismatches, and missed opportunities for internships and employment.
 
 💡 Solution
 
-AI Career Mentor is an AI-powered web application that provides:
+AI Career Mentor is an AI-powered web platform that provides:
 
 Personalized career guidance based on a student’s interests and education level
 
-Clear, structured multi-year learning roadmaps
+Structured, multi-year learning roadmaps
 
-Actionable guidance on skills, projects, and certifications
+Clear recommendations for skills, projects, and certifications
 
-The platform makes career planning accessible, structured, and scalable for students everywhere.
+The platform makes career planning accessible, structured, and actionable for students globally.
 
 🧠 How It Works
 
-A user asks a career-related question or provides an area of interest
+A user submits a career-related question or interest
 
 The backend processes the input and generates:
 
-A short professional summary
+A concise professional summary
 
-A detailed career roadmap (shown on demand)
+A detailed career roadmap (available on demand)
 
 The frontend:
 
@@ -42,13 +42,13 @@ Displays the summary first to avoid information overload
 
 Allows users to expand and view the full roadmap when needed
 
-This design balances clarity with depth.
+This approach balances clarity with depth.
 
 🏗️ System Architecture
 
-AI Career Mentor follows a modular, cloud-ready architecture that cleanly separates the user interface, backend logic, and AI intelligence layer. This ensures scalability, maintainability, and future AI integration.
+AI Career Mentor follows a modular, cloud-ready architecture that separates the frontend, backend, and AI logic layers to ensure scalability and maintainability.
 
-🔹 High-Level Architecture Flow
+High-Level Architecture Flow
 User (Browser)
      |
      v
@@ -62,7 +62,7 @@ Backend (FastAPI)
      v
 Structured Career Guidance Response
 
-🔹 Frontend Layer
+Frontend Layer
 
 Lightweight, responsive web interface
 
@@ -72,17 +72,15 @@ Responsible for:
 
 Capturing user career queries
 
-Displaying a concise summary
+Displaying concise summaries
 
-Allowing users to toggle and view a full roadmap
+Allowing users to toggle and view detailed roadmaps
 
-The UI is designed to look professional and easy to understand, similar to modern AI assistants.
+Backend Layer
 
-🔹 Backend Layer
+Built using FastAPI
 
-Implemented using FastAPI
-
-Exposes a REST endpoint (/api/career-advice)
+Exposes a REST endpoint: /api/career-advice
 
 Handles:
 
@@ -90,26 +88,25 @@ Input validation
 
 Career logic processing
 
-Structured response generation (summary + detailed roadmap)
+Structured response generation (summary + roadmap)
 
-FastAPI was chosen for its performance, clarity, and ease of cloud deployment.
+FastAPI was selected for its performance and cloud deployment friendliness.
 
-🔹 AI & Intelligence Layer
+AI & Intelligence Layer
 
-Currently, the backend uses structured, rule-based logic to generate career roadmaps.
-The system is intentionally designed to be AI-ready, enabling seamless integration with Azure OpenAI.
+Currently uses structured, rule-based logic for roadmap generation
 
-Planned AI enhancements include:
+Designed to be AI-ready for seamless Azure OpenAI integration
 
-Dynamic roadmap generation using Azure OpenAI
+Planned enhancements include:
 
-Context-aware conversational mentoring
+Context-aware AI responses
 
-Personalized guidance based on user profiles and progress
+Dynamic roadmap generation
 
-This approach ensures reliability today and intelligent adaptability in future versions.
+Personalized mentoring based on user profiles
 
-🔹 Cloud & Deployment Strategy
+Cloud & Deployment Strategy
 
 Azure Static Web Apps – Frontend hosting
 
@@ -119,57 +116,93 @@ GitHub – Source control and CI/CD
 
 Azure OpenAI (planned) – Intelligent response generation
 
-The architecture supports independent scaling of frontend and backend services.
+🤖 Azure OpenAI Integration Plan
 
-🔹 Security & Best Practices
+AI Career Mentor is built with an AI-first design, enabling future integration with Azure OpenAI when regional access is available.
 
-CORS configuration for controlled frontend access
+Why Azure OpenAI
 
-No hardcoded secrets in the repository
+Enterprise-grade security and compliance
 
-Environment-variable–based configuration for future API keys
+Built-in Responsible AI tooling
 
-Clear separation of responsibilities across layers
+Native Azure ecosystem integration
 
-🔹 Why This Architecture Works
+Scalable, production-ready language models
 
-Simple and easy to understand
+Planned Azure OpenAI Flow
+User Query
+    |
+    v
+Frontend (Azure Static Web Apps)
+    |
+    v
+Backend (FastAPI)
+    |
+    | Prompt Construction
+    v
+Azure OpenAI (GPT Model)
+    |
+    v
+Structured Career Guidance Response
 
-Cloud-native and scalable
+Prompt Design Strategy
 
-AI-ready without overengineering
+Prompts will include:
 
-Suitable for real-world deployment
+Education level
 
-Aligned with Microsoft Imagine Cup evaluation standards
+Career interests
+
+Structured output requirements (summary + roadmap)
+
+This ensures:
+
+Consistent output quality
+
+Reduced hallucinations
+
+Guidance-focused responses
+
+Fallback & Reliability
+
+Due to current regional limitations:
+
+A rule-based logic layer is active
+
+The AI interface is abstracted to allow:
+
+Easy replacement with Azure OpenAI
+
+No frontend or architectural changes
 
 ⚖️ Responsible AI Considerations
 
-AI Career Mentor follows responsible AI principles by:
+The platform follows responsible AI principles by:
 
 Providing guidance rather than deterministic decisions
 
 Avoiding biased or harmful recommendations
 
-Encouraging continuous learning instead of fixed career paths
+Encouraging continuous learning
 
-Maintaining transparency in how guidance is generated
+Maintaining transparency in AI-generated outputs
 
-Future versions will include explainable AI responses and user feedback loops.
+Future versions will include explainability and user feedback loops.
 
 🌍 Impact
 
 Helps students make better-informed career decisions
 
-Reduces dependency on expensive private mentoring
+Reduces reliance on costly private mentoring
 
 Scales globally through cloud deployment
 
-Supports employability in high-demand fields like AI and cloud computing
+Supports employability in high-demand technology fields
 
 🚀 Future Enhancements
 
-Azure OpenAI integration for conversational mentoring
+Full Azure OpenAI-powered conversational mentoring
 
 Resume analysis and skill-gap detection
 
@@ -181,19 +214,19 @@ Multi-language support
 
 🎯 Imagine Cup Alignment
 
-This project aligns strongly with Imagine Cup goals by:
+AI Career Mentor aligns with Imagine Cup goals by:
 
-Solving a real-world education and employability problem
+Addressing a real-world education and employability challenge
 
 Using AI and cloud technologies responsibly
 
-Being scalable, impactful, and accessible
+Demonstrating scalability and social impact
 
-Demonstrating practical AI application for social good
+Applying AI for meaningful, real-life outcomes
 
 📂 Repository Structure
 ai-career-mentor/
-├── ai-career-mentor-ui/   # Frontend (Azure Static Web App)
+├── ai-career-mentor-ui/   # Frontend
 ├── backend/               # FastAPI backend
 ├── .gitignore
 └── README.md
