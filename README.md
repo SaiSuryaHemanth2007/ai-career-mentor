@@ -3,10 +3,11 @@
 
 ## 🎬 Demo Video
 
-▶️ **Imagine Cup MVP Demo**  
-Watch the live demo showcasing the AI Career Mentor frontend, structured career guidance, and roadmap interaction.
+▶️ **Imagine Cup MVP Demo – AI Career Mentor**  
+A short walkthrough showcasing the frontend experience, structured career guidance flow, and roadmap interaction.
 
-👉 [Watch Demo Video](https://github.com/SaiSuryaHemanth2007/ai-career-mentor/releases/download/v1.0/AI-Career-Mentor_Imagine-Cup_Demo.mp4)
+👉 Watch Demo (Unlisted YouTube):  
+https://youtu.be/oRIkbHDLQgg
 
 ## 📌 Problem Statement
 
