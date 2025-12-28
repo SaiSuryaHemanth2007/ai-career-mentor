@@ -224,6 +224,121 @@ Demonstrating scalability and social impact
 
 Applying AI for meaningful, real-life outcomes
 
+🎬 Demo Walkthrough (For Judges)
+
+This walkthrough demonstrates how AI Career Mentor delivers structured, responsible, and actionable career guidance.
+
+🔹 Demo Setup (What the Judge Does First)
+
+Open the live frontend URL
+
+See a clean chat-style interface
+
+Input a career-related question or interest
+
+No login, no setup — instant access.
+
+🔹 Demo Question 1 (Primary – MUST USE)
+✅ Question
+
+“I am a second-year student interested in AI and cloud computing. What should I do next?”
+
+✅ What the System Shows
+
+A short professional summary explaining the career direction
+
+A “Show Full Roadmap” button below the summary
+
+✅ Why This Matters
+
+Shows clarity-first design
+
+Avoids overwhelming the user
+
+Demonstrates structured guidance, not generic chat responses
+
+🔹 Demo Question 2 (Skill Transition Scenario)
+✅ Question
+
+“I know basic programming but want to move into AI roles. What skills should I focus on?”
+
+✅ What the System Shows
+
+A concise explanation of skill progression
+
+Emphasis on foundations → specialization
+
+Option to expand into a multi-year roadmap
+
+✅ Why This Matters
+
+Shows adaptability to different user backgrounds
+
+Demonstrates real-world applicability
+
+🔹 Demo Question 3 (Career Confusion Scenario)
+✅ Question
+
+“I am confused about my career path. How can I prepare for future jobs?”
+
+✅ What the System Shows
+
+A calm, professional summary
+
+Clear learning structure instead of vague motivation
+
+Practical guidance (skills, projects, certifications)
+
+✅ Why This Matters
+
+Highlights social impact
+
+Addresses a real student pain point
+
+🔹 Key Feature to Highlight (IMPORTANT)
+📌 Toggle-Based Roadmap
+
+Summary shown by default
+
+Full roadmap revealed only on request
+
+Same message box expands/collapses content
+
+👉 This shows thoughtful UX, not just AI output.
+
+🔹 What Judges Should Notice
+
+The system provides guidance, not promises
+
+Responses are structured and professional
+
+Architecture supports Azure OpenAI integration
+
+Design aligns with Responsible AI principles
+
+🔹 If a Judge Asks:
+“How is this different from ChatGPT?”
+
+Answer:
+
+“AI Career Mentor is not a generic chatbot.
+It provides structured, career-specific guidance with clear roadmaps, controlled output formats, and responsible AI design.
+It is built specifically for students, not general conversation.”
+
+🔹 If a Judge Asks:
+“What happens when Azure OpenAI is enabled?”
+
+Answer:
+
+“The same interface becomes conversational and more personalized, while preserving the structured roadmap format.
+No frontend or architectural changes are required.”
+
+🔹 Demo Duration
+
+⏱️ 30–45 seconds total
+
+Designed to respect judges’ limited time.
+
 📂 Repository Structure
 ai-career-mentor/
 ├── ai-career-mentor-ui/   # Frontend
