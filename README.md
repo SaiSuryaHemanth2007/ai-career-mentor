@@ -1,6 +1,13 @@
 # AI Career Mentor
 **An AI-powered career guidance platform for students**
 
+## 🎬 Demo Video
+
+▶️ **Imagine Cup MVP Demo**  
+Watch the live demo showcasing the AI Career Mentor frontend, structured career guidance, and roadmap interaction.
+
+👉 [Watch Demo Video](https://github.com/SaiSuryaHemanth2007/ai-career-mentor/releases/download/v1.0/AI-Career-Mentor_Imagine-Cup_Demo.mp4)
+
 ## 📌 Problem Statement
 
 Many students struggle to make informed career decisions due to:
