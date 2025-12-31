@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Career Mentor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at top, #0f172a, #020617);
+      color: #e5e7eb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .chat-container {
+      width: 400px;
+      max-height: 90vh;
+      background: #020617;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 40px rgba(0,0,0,0.7);
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 16px;
+      text-align: center;
+      font-weight: bold;
+      color: #38bdf8;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .bubble {
+      max-width: 85%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .user {
+      background: #2563eb;
+      align-self: flex-end;
+    }
+
+    .ai {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      align-self: flex-start;
+    }
+
+    .thinking {
+      opacity: 0.7;
+      font-style: italic;
+    }
+
+    .followups {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      padding: 6px 10px;
+      border-radius: 20px;
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+      cursor: pointer;
+      font-size: 12px;
+      transition: 0.2s;
+    }
+
+    .chip:hover {
+      background: #38bdf8;
+      color: #020617;
+    }
+
+    .controls {
+      padding: 12px;
+      border-top: 1px solid #1e293b;
+      display: flex;
+      gap: 8px;
+    }
+
+    .controls input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #1e293b;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .controls button {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+<div class="chat-container">
+  <div class="header">AI Career Mentor</div>
+
+  <div class="messages" id="messages">
+    <div class="bubble ai">
+      👋 Ask me anything about your career path.
+    </div>
+  </div>
+
+  <div class="controls">
+    <input id="input" placeholder="Type your question..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+  const API_URL = "https://ai-career-mentor-backend-axw0.onrender.com/api/career-advice";
+
+  function addBubble(role, text, extra = null) {
+    const div = document.createElement("div");
+    div.className = `bubble ${role}`;
+    div.innerText = text;
+
+    if (extra) div.appendChild(extra);
+
+    document.getElementById("messages").appendChild(div);
+    div.scrollIntoView({ behavior: "smooth" });
+    return div;
+  }
+
+  function typingEffect(element, text) {
+    element.innerText = "";
+    let i = 0;
+    const interval = setInterval(() => {
+      element.innerText += text[i++];
+      if (i >= text.length) clearInterval(interval);
+    }, 15);
+  }
+
+  function followUpButtons() {
+    const container = document.createElement("div");
+    container.className = "followups";
+
+    const questions = [
+      "Suggest projects for me",
+      "What skills should I learn next?",
+      "Recommended certifications",
+      "How to prepare for internships?"
+    ];
+
+    questions.forEach(q => {
+      const chip = document.createElement("div");
+      chip.className = "chip";
+      chip.innerText = q;
+      chip.onclick = () => {
+        document.getElementById("input").value = q;
+        sendMessage();
+      };
+      container.appendChild(chip);
+    });
+
+    return container;
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById("input");
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = "";
+    addBubble("user", text);
+
+    const thinking = addBubble("ai thinking", "AI is thinking...");
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          interest: text,
+          education_level: "Student"
+        })
+      });
+
+      const data = await res.json();
+      thinking.remove();
+
+      const aiBubble = addBubble("ai", "");
+      typingEffect(aiBubble, data.summary);
+
+      setTimeout(() => {
+        aiBubble.appendChild(followUpButtons());
+      }, 800);
+
+    } catch {
+      thinking.innerText = "⚠️ Backend not reachable.";
+    }
+  }
+</script>
+</body>
+</html>
+<!-- ChatGPT-style UI deployed -->
