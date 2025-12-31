@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Career Mentor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at top, #0f172a, #020617);
+      color: #e5e7eb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .chat-container {
+      background: #020617;
+      width: 380px;
+      max-height: 85vh;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 30px rgba(0,0,0,0.6);
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 16px;
+      text-align: center;
+      font-weight: bold;
+      color: #38bdf8;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .bubble {
+      max-width: 85%;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+
+    .bubble.user {
+      background: #2563eb;
+      align-self: flex-end;
+      margin-left: auto;
+    }
+
+    .bubble.ai {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+    }
+
+    .controls {
+      padding: 12px;
+      border-top: 1px solid #1e293b;
+    }
+
+    .controls input {
+      width: calc(100% - 70px);
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      background: #020617;
+      color: #e5e7eb;
+      border: 1px solid #1e293b;
+    }
+
+    .controls button {
+      width: 60px;
+      margin-left: 8px;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+    }
+
+    #roadmapBtn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+      border-radius: 8px;
+      cursor: pointer;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="chat-container">
+    <div class="header">AI Career Mentor</div>
+
+    <div class="messages" id="messages">
+      <div class="bubble ai">
+        Ask me anything about your career.
+      </div>
+    </div>
+
+    <div class="controls">
+      <button id="roadmapBtn" onclick="toggleRoadmap()">Show Full Roadmap</button>
+      <div style="display:flex; margin-top:8px;">
+        <input id="input" placeholder="Ask your career question..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://ai-career-mentor-backend-axw0.onrender.com/api/career-advice";
+
+    let summaryText = "";
+    let fullRoadmap = "";
+    let isRoadmapVisible = false;
+    let roadmapBubble = null;
+
+    function addMessage(role, text) {
+      const div = document.createElement("div");
+      div.className = `bubble ${role}`;
+      div.innerText = text;
+      document.getElementById("messages").appendChild(div);
+      div.scrollIntoView({ behavior: "smooth" });
+      return div;
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("input");
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMessage("user", text);
+      input.value = "";
+
+      const thinking = addMessage("ai", "Generating response...");
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            interest: text,
+            education_level: "Student"
+          })
+        });
+
+        const data = await response.json();
+        thinking.remove();
+
+        summaryText = data.summary;
+        fullRoadmap = data.detailed;
+        isRoadmapVisible = false;
+
+        roadmapBubble = addMessage("ai", summaryText);
+
+        const btn = document.getElementById("roadmapBtn");
+        btn.innerText = "Show Full Roadmap";
+        btn.style.display = "block";
+
+      } catch (err) {
+        thinking.innerText = "Backend connection failed.";
+      }
+    }
+
+    function toggleRoadmap() {
+      if (!roadmapBubble) return;
+
+      const btn = document.getElementById("roadmapBtn");
+
+      if (!isRoadmapVisible) {
+        roadmapBubble.innerText = fullRoadmap;
+        btn.innerText = "Hide Full Roadmap";
+        isRoadmapVisible = true;
+      } else {
+        roadmapBubble.innerText = summaryText;
+        btn.innerText = "Show Full Roadmap";
+        isRoadmapVisible = false;
+      }
+
+      roadmapBubble.scrollIntoView({ behavior: "smooth" });
+    }
+  </script>
+</body>
+</html>
