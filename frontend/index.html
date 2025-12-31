@@ -124,7 +124,9 @@
   </div>
 
   <script>
-    const API_URL = "https://ai-career-mentor-backend-axw0.onrender.com/api/career-advice";
+    // 🔗 BACKEND URL (Render)
+    const API_URL =
+      "https://ai-career-mentor-backend-axw0.onrender.com/api/career-advice";
 
     let summaryText = "";
     let fullRoadmap = "";
@@ -160,11 +162,15 @@
           })
         });
 
+        if (!response.ok) {
+          throw new Error("Backend error");
+        }
+
         const data = await response.json();
         thinking.remove();
 
-        summaryText = data.summary;
-        fullRoadmap = data.detailed;
+        summaryText = data.summary || "No summary received.";
+        fullRoadmap = data.detailed || "No roadmap received.";
         isRoadmapVisible = false;
 
         roadmapBubble = addMessage("ai", summaryText);
