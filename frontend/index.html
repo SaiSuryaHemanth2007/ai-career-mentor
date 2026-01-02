@@ -124,9 +124,7 @@
   </div>
 
   <script>
-    // 🔗 BACKEND URL (Render)
-    const API_URL =
-      "https://ai-career-mentor-backend-axw0.onrender.com/api/career-advice";
+    const API_URL = "https://ai-career-mentor-backend-axw0.onrender.com/api/career-advice";
 
     let summaryText = "";
     let fullRoadmap = "";
@@ -140,6 +138,11 @@
       document.getElementById("messages").appendChild(div);
       div.scrollIntoView({ behavior: "smooth" });
       return div;
+    }
+
+    function extractTitle(roadmapText) {
+      const match = roadmapText.match(/\*\*(.*?)Career Roadmap\*\*/);
+      return match ? match[1] + "Career Roadmap" : null;
     }
 
     async function sendMessage() {
@@ -158,22 +161,23 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             interest: text,
-            education_level: "Student"
+            education_level: "BTech"
           })
         });
-
-        if (!response.ok) {
-          throw new Error("Backend error");
-        }
 
         const data = await response.json();
         thinking.remove();
 
-        summaryText = data.summary || "No summary received.";
-        fullRoadmap = data.detailed || "No roadmap received.";
+        summaryText = data.summary;
+        fullRoadmap = data.detailed;
         isRoadmapVisible = false;
 
-        roadmapBubble = addMessage("ai", summaryText);
+        const dynamicTitle = extractTitle(fullRoadmap);
+        const finalSummary = dynamicTitle
+          ? `${dynamicTitle}\n\n${summaryText}`
+          : summaryText;
+
+        roadmapBubble = addMessage("ai", finalSummary);
 
         const btn = document.getElementById("roadmapBtn");
         btn.innerText = "Show Full Roadmap";
@@ -194,7 +198,10 @@
         btn.innerText = "Hide Full Roadmap";
         isRoadmapVisible = true;
       } else {
-        roadmapBubble.innerText = summaryText;
+        const dynamicTitle = extractTitle(fullRoadmap);
+        roadmapBubble.innerText = dynamicTitle
+          ? `${dynamicTitle}\n\n${summaryText}`
+          : summaryText;
         btn.innerText = "Show Full Roadmap";
         isRoadmapVisible = false;
       }
