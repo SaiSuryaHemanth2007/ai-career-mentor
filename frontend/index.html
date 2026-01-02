@@ -109,9 +109,7 @@
     <div class="header">AI Career Mentor</div>
 
     <div class="messages" id="messages">
-      <div class="bubble ai">
-        Ask me anything about your career.
-      </div>
+      <div class="bubble ai">Ask me anything about your career.</div>
     </div>
 
     <div class="controls">
@@ -128,9 +126,15 @@
 
     let summaryText = "";
     let fullRoadmap = "";
-    let roadmapTitle = "";
     let isRoadmapVisible = false;
     let roadmapBubble = null;
+
+    function cleanBackendText(text) {
+      return text
+        .replace(/📘.*Career Roadmap\n*/gi, "")
+        .replace(/\*\*.*Career Roadmap\*\*\n*/gi, "")
+        .trim();
+    }
 
     function addMessage(role, text) {
       const div = document.createElement("div");
@@ -143,10 +147,10 @@
 
     async function sendMessage() {
       const input = document.getElementById("input");
-      const text = input.value.trim();
-      if (!text) return;
+      const interest = input.value.trim();
+      if (!interest) return;
 
-      addMessage("user", text);
+      addMessage("user", interest);
       input.value = "";
 
       const thinking = addMessage("ai", "Generating response...");
@@ -156,7 +160,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            interest: text,
+            interest,
             education_level: "BTech"
           })
         });
@@ -164,14 +168,11 @@
         const data = await response.json();
         thinking.remove();
 
-        // 🔥 DYNAMIC ROADMAP TITLE FIX
-        const interestFormatted =
-          text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+        const title =
+          `📘 2-Year ${interest.charAt(0).toUpperCase() + interest.slice(1)} Career Roadmap`;
 
-        roadmapTitle = `2-Year ${interestFormatted} Career Roadmap`;
-
-        summaryText = `📘 ${roadmapTitle}\n\n${data.summary}`;
-        fullRoadmap = `📘 ${roadmapTitle}\n\n${data.detailed}`;
+        summaryText = `${title}\n\n${cleanBackendText(data.summary)}`;
+        fullRoadmap = `${title}\n\n${cleanBackendText(data.detailed)}`;
 
         isRoadmapVisible = false;
         roadmapBubble = addMessage("ai", summaryText);
@@ -180,7 +181,7 @@
         btn.innerText = "Show Full Roadmap";
         btn.style.display = "block";
 
-      } catch (err) {
+      } catch {
         thinking.innerText = "Backend connection failed.";
       }
     }
