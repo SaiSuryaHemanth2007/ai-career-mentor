@@ -128,6 +128,7 @@
 
     let summaryText = "";
     let fullRoadmap = "";
+    let roadmapTitle = "";
     let isRoadmapVisible = false;
     let roadmapBubble = null;
 
@@ -138,11 +139,6 @@
       document.getElementById("messages").appendChild(div);
       div.scrollIntoView({ behavior: "smooth" });
       return div;
-    }
-
-    function extractTitle(roadmapText) {
-      const match = roadmapText.match(/\*\*(.*?)Career Roadmap\*\*/);
-      return match ? match[1] + "Career Roadmap" : null;
     }
 
     async function sendMessage() {
@@ -168,16 +164,17 @@
         const data = await response.json();
         thinking.remove();
 
-        summaryText = data.summary;
-        fullRoadmap = data.detailed;
+        // 🔥 DYNAMIC ROADMAP TITLE FIX
+        const interestFormatted =
+          text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+
+        roadmapTitle = `2-Year ${interestFormatted} Career Roadmap`;
+
+        summaryText = `📘 ${roadmapTitle}\n\n${data.summary}`;
+        fullRoadmap = `📘 ${roadmapTitle}\n\n${data.detailed}`;
+
         isRoadmapVisible = false;
-
-        const dynamicTitle = extractTitle(fullRoadmap);
-        const finalSummary = dynamicTitle
-          ? `${dynamicTitle}\n\n${summaryText}`
-          : summaryText;
-
-        roadmapBubble = addMessage("ai", finalSummary);
+        roadmapBubble = addMessage("ai", summaryText);
 
         const btn = document.getElementById("roadmapBtn");
         btn.innerText = "Show Full Roadmap";
@@ -198,10 +195,7 @@
         btn.innerText = "Hide Full Roadmap";
         isRoadmapVisible = true;
       } else {
-        const dynamicTitle = extractTitle(fullRoadmap);
-        roadmapBubble.innerText = dynamicTitle
-          ? `${dynamicTitle}\n\n${summaryText}`
-          : summaryText;
+        roadmapBubble.innerText = summaryText;
         btn.innerText = "Show Full Roadmap";
         isRoadmapVisible = false;
       }
