@@ -7,7 +7,7 @@
 A short walkthrough showcasing the frontend experience, structured career guidance flow, and roadmap interaction.
 
 👉 Watch Demo (Unlisted YouTube):  
-https://youtu.be/oRIkbHDLQgg
+https://youtu.be/cPMfCEg9O58
 
 ## 📌 Problem Statement
 
@@ -41,43 +41,41 @@ This approach balances clarity with depth.
 
 ## 🏗️ System Architecture
 
-AI Career Mentor follows a modular, cloud-ready architecture that separates the frontend, backend, and AI logic layers to ensure scalability and maintainability.
+AI Career Mentor follows a modular, cloud-ready architecture that separates the frontend, backend, and intelligence layers to ensure scalability and maintainability.
 
 ### High-Level Architecture Flow
 
 User (Browser)
-|
-v
+↓
 Frontend (Azure Static Web Apps)
-|
-| HTTPS REST API
-v
+↓ HTTPS REST API
 Backend (FastAPI)
-|
-| Career Logic / AI Layer
-v
+↓
+Career Logic / AI Layer
+↓
 Structured Career Guidance Response
 
 ### Frontend Layer
 - Lightweight, responsive web interface
 - Hosted on Azure Static Web Apps
 - Responsible for:
-  - Capturing user career queries
-  - Displaying concise summaries
-  - Allowing users to toggle and view detailed roadmaps
+- Capturing user career queries
+- Displaying concise summaries
+- Toggling detailed roadmaps on demand
 
 ### Backend Layer
 - Built using FastAPI
 - Exposes a REST endpoint: `/api/career-advice`
 - Handles:
-  - Input validation
-  - Career logic processing
-  - Structured response generation (summary + roadmap)
+- Input validation and cleanup
+- Career logic processing
+- Structured response generation (summary + roadmap)
 
 FastAPI was selected for its performance and cloud deployment friendliness.
 
 ### AI & Intelligence Layer
 - Uses structured, rule-based logic for roadmap generation
+- Includes input normalization to handle spelling variations
 - Designed to be AI-ready for seamless Azure OpenAI integration
 
 Planned enhancements include:
@@ -85,11 +83,11 @@ Planned enhancements include:
 - Dynamic roadmap generation
 - Personalized mentoring based on user profiles
 
-### Cloud & Deployment Strategy
-- Azure Static Web Apps – Frontend hosting
-- FastAPI (Azure / Render) – Backend API hosting
-- GitHub – Source control and CI/CD
-- Azure OpenAI (planned) – Intelligent response generation
+## ☁️ Cloud & Deployment Strategy
+- **Azure Static Web Apps** – Frontend hosting
+- **FastAPI (Render / Azure-ready)** – Backend API hosting
+- **GitHub** – Source control and CI/CD
+- **Azure OpenAI (planned)** – Intelligent response generation
 
 ## 🤖 Azure OpenAI Integration Plan
 
@@ -101,42 +99,25 @@ AI Career Mentor is built with an AI-first design, enabling future integration w
 - Native Azure ecosystem integration
 - Scalable, production-ready language models
 
-### Planned Azure OpenAI Flow
+### Planned Flow
 
 User Query
-|
-v
-Frontend (Azure Static Web Apps)
-|
-v
-Backend (FastAPI)
-|
-| Prompt Construction
-v
+↓
+Frontend
+↓
+Backend (Prompt Construction)
+↓
 Azure OpenAI (GPT Model)
-|
-v
+↓
 Structured Career Guidance Response
-
-### Prompt Design Strategy
-
-Prompts include:
-- Education level
-- Career interests
-- Structured output requirements (summary + roadmap)
-
-This ensures:
-- Consistent output quality
-- Reduced hallucinations
-- Guidance-focused responses
 
 ### Fallback & Reliability
 
 Due to current regional limitations:
 - A rule-based logic layer is active
 - The AI interface is abstracted to allow:
-  - Easy replacement with Azure OpenAI
-  - No frontend or architectural changes
+- Easy replacement with Azure OpenAI
+- No frontend or architectural changes
 
 ## ⚖️ Responsible AI Considerations
 
@@ -173,76 +154,26 @@ AI Career Mentor aligns with Imagine Cup goals by:
 
 ## 🎬 Demo Walkthrough (For Judges)
 
-This walkthrough demonstrates how AI Career Mentor delivers structured, responsible, and actionable career guidance.
+**Demo Duration:** 30–45 seconds
 
-### Demo Setup
+### Demo Steps
 1. Open the live frontend URL  
-2. See a clean chat-style interface  
-3. Input a career-related question or interest  
+2. Observe the clean, chat-style interface  
+3. Enter a career-related question or interest  
 
-No login, no setup — instant access.
+No login. No setup. Instant access.
 
-### Demo Question 1 (Primary)
-**Question:**  
-“I am a second-year student interested in AI and cloud computing. What should I do next?”
-
-**What the System Shows:**
-- A short professional summary
-- A “Show Full Roadmap” button below the summary
-
-**Why This Matters:**
-- Clarity-first design
-- Avoids overwhelming users
-- Demonstrates structured guidance
-
-### Demo Question 2 (Skill Transition)
-**Question:**  
-“I know basic programming but want to move into AI roles. What skills should I focus on?”
-
-### Demo Question 3 (Career Confusion)
-**Question:**  
-“I am confused about my career path. How can I prepare for future jobs?”
-
-### Key Feature Highlight
-**Toggle-Based Roadmap**
+### Key Feature Highlight — Toggle-Based Roadmap
 - Summary shown by default
 - Full roadmap revealed only on request
-- Same message box expands and collapses content
+- Same message container expands and collapses content
 
-### Demo Duration
-30–45 seconds total, designed to respect judges’ limited time.
-
-## 🚀 Innovation Angle
-
-AI Career Mentor is not a generic AI chatbot.  
-Its innovation lies in how AI guidance is structured, controlled, and delivered for real-world student needs.
-
-### Structured Guidance Over Open-Ended Chat
-- Separates summaries from detailed roadmaps
-- Allows progressive disclosure of information
-- Reduces cognitive overload
-
-### Career-Specific Intelligence
-- Purpose-built for mentoring, not casual chat
-- Roadmap-oriented outputs
-- Guidance, not guarantees
-
-### Responsible AI by Design
-- Avoids deterministic career decisions
-- Encourages adaptability and transparency
-
-### AI-Ready, Not AI-Dependent
-- Works reliably without generative AI
-- Seamlessly integrates Azure OpenAI when available
-
-### Scalable Social Impact
-- Democratizes access to mentorship
-- Supports employability in fast-growing tech fields
+This design avoids cognitive overload while preserving depth.
 
 ## 📂 Repository Structure
 
 ai-career-mentor/
-├── ai-career-mentor-ui/ # Frontend
+├── frontend/ # Azure Static Web App
 ├── backend/ # FastAPI backend
 ├── .gitignore
 └── README.md
