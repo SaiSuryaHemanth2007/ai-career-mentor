@@ -7,6 +7,7 @@
 
   <style>
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
       background: radial-gradient(circle at top, #0f172a, #020617);
       color: #e5e7eb;
@@ -14,18 +15,16 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
     }
 
-    .chat-container {
-      background: #020617;
+    .container {
       width: 380px;
-      max-height: 85vh;
+      background: #020617;
       border-radius: 14px;
-      display: flex;
-      flex-direction: column;
       box-shadow: 0 0 30px rgba(0,0,0,0.6);
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     .header {
@@ -42,25 +41,15 @@
       overflow-y: auto;
     }
 
-    .bubble {
-      max-width: 85%;
-      padding: 12px 14px;
-      margin-bottom: 12px;
+    .message {
+      background: #0f172a;
+      border: 1px solid #1e293b;
       border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
       font-size: 14px;
       line-height: 1.4;
       white-space: pre-wrap;
-    }
-
-    .bubble.user {
-      background: #2563eb;
-      align-self: flex-end;
-      margin-left: auto;
-    }
-
-    .bubble.ai {
-      background: #0f172a;
-      border: 1px solid #1e293b;
     }
 
     .controls {
@@ -68,140 +57,175 @@
       border-top: 1px solid #1e293b;
     }
 
-    .controls input {
-      width: calc(100% - 70px);
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      background: #020617;
-      color: #e5e7eb;
-      border: 1px solid #1e293b;
+    .year-selector {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
     }
 
-    .controls button {
-      width: 60px;
-      margin-left: 8px;
-      padding: 10px;
+    .year-btn {
+      flex: 1;
+      padding: 8px;
       border-radius: 8px;
-      border: none;
+      border: 1px solid #1e293b;
+      background: transparent;
+      color: #94a3b8;
       cursor: pointer;
+      font-size: 13px;
+    }
+
+    .year-btn.active {
       background: #2563eb;
       color: white;
+      border-color: #2563eb;
     }
 
-    #roadmapBtn {
-      width: 100%;
-      margin-top: 8px;
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    input {
+      flex: 1;
       padding: 10px;
-      background: transparent;
-      border: 1px solid #38bdf8;
-      color: #38bdf8;
       border-radius: 8px;
+      border: 1px solid #1e293b;
+      background: #020617;
+      color: #e5e7eb;
+      outline: none;
+    }
+
+    button.send {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      background: #2563eb;
+      color: white;
       cursor: pointer;
+    }
+
+    .toggle-btn {
+      margin-top: 10px;
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #38bdf8;
+      background: transparent;
+      color: #38bdf8;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .roadmap {
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .hidden {
       display: none;
     }
   </style>
 </head>
 
 <body>
-  <div class="chat-container">
+  <div class="container">
     <div class="header">AI Career Mentor</div>
 
     <div class="messages" id="messages">
-      <div class="bubble ai">Ask me anything about your career.</div>
+      <div class="message">
+        Ask me anything about your career.
+      </div>
     </div>
 
     <div class="controls">
-      <button id="roadmapBtn" onclick="toggleRoadmap()">Show Full Roadmap</button>
-      <div style="display:flex; margin-top:8px;">
-        <input id="input" placeholder="Ask your career question..." />
-        <button onclick="sendMessage()">Send</button>
+
+      <!-- YEAR SELECTOR -->
+      <div class="year-selector">
+        <button class="year-btn" data-year="1">1 Year</button>
+        <button class="year-btn active" data-year="2">2 Year</button>
+        <button class="year-btn" data-year="3">3 Year</button>
+        <button class="year-btn" data-year="4">4 Year</button>
       </div>
+
+      <!-- INPUT -->
+      <div class="input-row">
+        <input id="userInput" placeholder="Ask your career question..." />
+        <button class="send" onclick="sendMessage()">Send</button>
+      </div>
+
     </div>
   </div>
 
   <script>
     const API_URL = "https://ai-career-mentor-backend-axw0.onrender.com/api/career-advice";
 
-    let summaryText = "";
-    let fullRoadmap = "";
-    let isRoadmapVisible = false;
-    let roadmapBubble = null;
+    let selectedDuration = 2;
 
-    function cleanBackendText(text) {
-      return text
-        .replace(/📘.*Career Roadmap\n*/gi, "")
-        .replace(/\*\*.*Career Roadmap\*\*\n*/gi, "")
-        .trim();
-    }
-
-    function addMessage(role, text) {
-      const div = document.createElement("div");
-      div.className = `bubble ${role}`;
-      div.innerText = text;
-      document.getElementById("messages").appendChild(div);
-      div.scrollIntoView({ behavior: "smooth" });
-      return div;
-    }
+    // Year button logic
+    document.querySelectorAll(".year-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".year-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedDuration = parseInt(btn.dataset.year);
+      });
+    });
 
     async function sendMessage() {
-      const input = document.getElementById("input");
-      const interest = input.value.trim();
-      if (!interest) return;
+      const input = document.getElementById("userInput");
+      const text = input.value.trim();
+      if (!text) return;
 
-      addMessage("user", interest);
       input.value = "";
 
-      const thinking = addMessage("ai", "Generating response...");
+      const messages = document.getElementById("messages");
+
+      const thinking = document.createElement("div");
+      thinking.className = "message";
+      thinking.textContent = "Generating career roadmap...";
+      messages.appendChild(thinking);
+      thinking.scrollIntoView({ behavior: "smooth" });
 
       try {
         const response = await fetch(API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            interest,
-            education_level: "BTech"
+            interest: text,
+            education_level: "Student",
+            duration: selectedDuration
           })
         });
 
         const data = await response.json();
         thinking.remove();
 
-        const title =
-          `📘 2-Year ${interest.charAt(0).toUpperCase() + interest.slice(1)} Career Roadmap`;
+        const messageDiv = document.createElement("div");
+        messageDiv.className = "message";
 
-        summaryText = `${title}\n\n${cleanBackendText(data.summary)}`;
-        fullRoadmap = `${title}\n\n${cleanBackendText(data.detailed)}`;
+        messageDiv.innerHTML = `
+          <div>${data.summary}</div>
+          <button class="toggle-btn">Show Full Roadmap</button>
+          <div class="roadmap hidden">${data.detailed.replace(/\n/g, "<br>")}</div>
+        `;
 
-        isRoadmapVisible = false;
-        roadmapBubble = addMessage("ai", summaryText);
+        const toggleBtn = messageDiv.querySelector(".toggle-btn");
+        const roadmapDiv = messageDiv.querySelector(".roadmap");
 
-        const btn = document.getElementById("roadmapBtn");
-        btn.innerText = "Show Full Roadmap";
-        btn.style.display = "block";
+        toggleBtn.addEventListener("click", () => {
+          roadmapDiv.classList.toggle("hidden");
+          toggleBtn.textContent =
+            roadmapDiv.classList.contains("hidden")
+              ? "Show Full Roadmap"
+              : "Hide Full Roadmap";
+        });
 
-      } catch {
-        thinking.innerText = "Backend connection failed.";
+        messages.appendChild(messageDiv);
+        messageDiv.scrollIntoView({ behavior: "smooth" });
+
+      } catch (err) {
+        thinking.textContent = "Failed to connect to backend.";
       }
-    }
-
-    function toggleRoadmap() {
-      if (!roadmapBubble) return;
-
-      const btn = document.getElementById("roadmapBtn");
-
-      if (!isRoadmapVisible) {
-        roadmapBubble.innerText = fullRoadmap;
-        btn.innerText = "Hide Full Roadmap";
-        isRoadmapVisible = true;
-      } else {
-        roadmapBubble.innerText = summaryText;
-        btn.innerText = "Show Full Roadmap";
-        isRoadmapVisible = false;
-      }
-
-      roadmapBubble.scrollIntoView({ behavior: "smooth" });
     }
   </script>
 </body>
