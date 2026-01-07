@@ -7,7 +7,6 @@
 
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
       background: radial-gradient(circle at top, #0f172a, #020617);
       color: #e5e7eb;
@@ -15,16 +14,18 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
 
-    .container {
-      width: 380px;
+    .chat-container {
       background: #020617;
+      width: 380px;
+      max-height: 85vh;
       border-radius: 14px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.6);
-      overflow: hidden;
       display: flex;
       flex-direction: column;
+      box-shadow: 0 0 30px rgba(0,0,0,0.6);
+      overflow: hidden;
     }
 
     .header {
@@ -41,15 +42,23 @@
       overflow-y: auto;
     }
 
-    .message {
+    .bubble {
       background: #0f172a;
       border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 12px;
+      padding: 14px;
       margin-bottom: 12px;
+      border-radius: 12px;
       font-size: 14px;
-      line-height: 1.4;
+      line-height: 1.5;
       white-space: pre-wrap;
+    }
+
+    .toggle {
+      margin-top: 10px;
+      color: #38bdf8;
+      cursor: pointer;
+      font-size: 13px;
+      text-decoration: underline;
     }
 
     .controls {
@@ -57,13 +66,13 @@
       border-top: 1px solid #1e293b;
     }
 
-    .year-selector {
+    .duration {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       margin-bottom: 10px;
     }
 
-    .year-btn {
+    .duration button {
       flex: 1;
       padding: 8px;
       border-radius: 8px;
@@ -71,161 +80,107 @@
       background: transparent;
       color: #94a3b8;
       cursor: pointer;
-      font-size: 13px;
     }
 
-    .year-btn.active {
+    .duration button.active {
       background: #2563eb;
       color: white;
       border-color: #2563eb;
     }
 
-    .input-row {
-      display: flex;
-      gap: 8px;
-    }
-
-    input {
-      flex: 1;
+    .controls input {
+      width: calc(100% - 70px);
       padding: 10px;
       border-radius: 8px;
       border: 1px solid #1e293b;
       background: #020617;
       color: #e5e7eb;
-      outline: none;
     }
 
-    button.send {
-      padding: 10px 14px;
+    .controls button.send {
+      width: 60px;
+      margin-left: 8px;
+      padding: 10px;
       border-radius: 8px;
       border: none;
       background: #2563eb;
       color: white;
       cursor: pointer;
     }
-
-    .toggle-btn {
-      margin-top: 10px;
-      width: 100%;
-      padding: 8px;
-      border-radius: 8px;
-      border: 1px solid #38bdf8;
-      background: transparent;
-      color: #38bdf8;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .roadmap {
-      margin-top: 10px;
-      font-size: 13px;
-      line-height: 1.4;
-    }
-
-    .hidden {
-      display: none;
-    }
   </style>
 </head>
 
 <body>
-  <div class="container">
+  <div class="chat-container">
     <div class="header">AI Career Mentor</div>
 
     <div class="messages" id="messages">
-      <div class="message">
-        Ask me anything about your career.
-      </div>
+      <div class="bubble">Ask me anything about your career.</div>
     </div>
 
     <div class="controls">
-
-      <!-- YEAR SELECTOR -->
-      <div class="year-selector">
-        <button class="year-btn" data-year="1">1 Year</button>
-        <button class="year-btn active" data-year="2">2 Year</button>
-        <button class="year-btn" data-year="3">3 Year</button>
-        <button class="year-btn" data-year="4">4 Year</button>
+      <div class="duration">
+        <button onclick="setDuration(1)">1 Year</button>
+        <button class="active" onclick="setDuration(2)">2 Year</button>
+        <button onclick="setDuration(3)">3 Year</button>
+        <button onclick="setDuration(4)">4 Year</button>
       </div>
 
-      <!-- INPUT -->
-      <div class="input-row">
-        <input id="userInput" placeholder="Ask your career question..." />
+      <div style="display:flex;">
+        <input id="input" placeholder="Ask your career question..." />
         <button class="send" onclick="sendMessage()">Send</button>
       </div>
-
     </div>
   </div>
 
   <script>
     const API_URL = "https://ai-career-mentor-backend-axw0.onrender.com/api/career-advice";
-
     let selectedDuration = 2;
 
-    // Year button logic
-    document.querySelectorAll(".year-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".year-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        selectedDuration = parseInt(btn.dataset.year);
-      });
-    });
+    function setDuration(year) {
+      selectedDuration = year;
+      document.querySelectorAll(".duration button").forEach(b => b.classList.remove("active"));
+      event.target.classList.add("active");
+    }
 
     async function sendMessage() {
-      const input = document.getElementById("userInput");
+      const input = document.getElementById("input");
       const text = input.value.trim();
       if (!text) return;
-
       input.value = "";
 
-      const messages = document.getElementById("messages");
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.innerText = "Generating roadmap...";
+      document.getElementById("messages").appendChild(bubble);
 
-      const thinking = document.createElement("div");
-      thinking.className = "message";
-      thinking.textContent = "Generating career roadmap...";
-      messages.appendChild(thinking);
-      thinking.scrollIntoView({ behavior: "smooth" });
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          interest: text,
+          education_level: "Student"
+        })
+      });
 
-      try {
-        const response = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            interest: text,
-            education_level: "Student",
-            duration: selectedDuration
-          })
-        });
+      const data = await res.json();
 
-        const data = await response.json();
-        thinking.remove();
+      let expanded = false;
+      bubble.innerText = data.summary;
 
-        const messageDiv = document.createElement("div");
-        messageDiv.className = "message";
+      const toggle = document.createElement("div");
+      toggle.className = "toggle";
+      toggle.innerText = "Show full roadmap";
 
-        messageDiv.innerHTML = `
-          <div>${data.summary}</div>
-          <button class="toggle-btn">Show Full Roadmap</button>
-          <div class="roadmap hidden">${data.detailed.replace(/\n/g, "<br>")}</div>
-        `;
+      toggle.onclick = () => {
+        expanded = !expanded;
+        bubble.innerText = expanded ? data.detailed : data.summary;
+        toggle.innerText = expanded ? "Hide full roadmap" : "Show full roadmap";
+        bubble.appendChild(toggle);
+      };
 
-        const toggleBtn = messageDiv.querySelector(".toggle-btn");
-        const roadmapDiv = messageDiv.querySelector(".roadmap");
-
-        toggleBtn.addEventListener("click", () => {
-          roadmapDiv.classList.toggle("hidden");
-          toggleBtn.textContent =
-            roadmapDiv.classList.contains("hidden")
-              ? "Show Full Roadmap"
-              : "Hide Full Roadmap";
-        });
-
-        messages.appendChild(messageDiv);
-        messageDiv.scrollIntoView({ behavior: "smooth" });
-
-      } catch (err) {
-        thinking.textContent = "Failed to connect to backend.";
-      }
+      bubble.appendChild(toggle);
+      bubble.scrollIntoView({ behavior: "smooth" });
     }
   </script>
 </body>
